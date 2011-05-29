@@ -1,16 +1,15 @@
 #ifndef	WEAPON_H
 #define WEAPON_H
-#include"visibleObj.h"
-
-class weapon:public QWidget,public visibleObj
+#include<QWidget>
+class wepIcon:public QWidget
 {
-		Q_OBJECT
 		private:
-				int num;
+				int n;
+				static const iconSize = 25;
 		public:
-				weapon(const char* imgName, int n, const obj& model);
+				QPixmap icon;
+				wepIcon(const char* filename, int num);
+				int getN();
 				void changeNum(int d);
-				visibleObj* fork(vec launchPos);
-				inline bool have(){return (num >0);}
-};
+}
 #endif

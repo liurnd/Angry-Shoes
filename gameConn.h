@@ -26,7 +26,7 @@ class gameConn:public QWidget
 				vec launchPos;
 				QVBoxLayout* wepBar ;
 				void gameOver();
-				static QMap<int, weapon> wepList;
+				static QList<wepIcon> wepList;
 
 		private slots:
 				void tick();
@@ -35,7 +35,7 @@ class gameConn:public QWidget
 				int targetCnt;
 				void destory(visibleObj* o);
 				void loadWep(int type);
-				static void loadWeaponList();		//Load weapon list.If you want some new weapon, add it in this function
+				static void loadWeaponList();
 				gameConn(env* proxy, gamePlate* viewer);
 				static visibleObj* getWepEntity(int type);
 				void setMap(char* filename);
