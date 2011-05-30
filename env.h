@@ -7,6 +7,7 @@ class obj;
 class env
 {
 	private:
+		int fvckyou;
 	public:
 		vec g;
 		std::vector<obj*> list;
