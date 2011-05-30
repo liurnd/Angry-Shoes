@@ -11,7 +11,7 @@ class obj
 		virtual void hit(obj& byWho);
 
 		vec pos;
-		int type;
+		int typeID;
 		vec shape;
 		float theta;
 		float HP;

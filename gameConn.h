@@ -1,20 +1,19 @@
 #ifndef GAMECONN_H
 #define GAMECONN_H
-#include"env.h"
+#include<QVBoxLayout>
 #include"gameplate.h"
+#include"env.h"
 #include"obj.h"
 #include"visibleObj.h"
 #include"weapons.h"
 #include<QTimer>
 #include<QMap>
-#include<QVBoxLayout>
 #define DEFAULT_INTERVAL 10
 #define MAX_WEAPON_TYPE 255
 #define ICON_SIZE 25
 
 class env;
 class gamePlate;
-
 
 class gameConn:public QWidget
 {
@@ -26,7 +25,8 @@ class gameConn:public QWidget
 				vec launchPos;
 				QVBoxLayout* wepBar ;
 				void gameOver();
-				static QList<wepIcon> wepList;
+				QList<wepIcon*> wepList;
+				visibleObj* loaded;
 
 		private slots:
 				void tick();
@@ -35,7 +35,8 @@ class gameConn:public QWidget
 				int targetCnt;
 				void destory(visibleObj* o);
 				void loadWep(int type);
-				static void loadWeaponList();
+				void fire();
+				void loadWeaponList();
 				gameConn(env* proxy, gamePlate* viewer);
 				static visibleObj* getWepEntity(int type);
 				void setMap(char* filename);

@@ -17,6 +17,7 @@ class visibleObj:public obj, public QGraphicsPixmapItem
 		static inline void setGameConn(gameConn* con){conn = con;}
 
 		void sync();
-		void destory(obj& byWho);
+		virtual void destory(obj& byWho);
+		void destory();
 };
 #endif

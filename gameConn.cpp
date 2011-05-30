@@ -4,12 +4,7 @@
 #include"gameConn.h"
 #include<cstdio>
 #include <QMessageBox>
-
-void gameConn::loadWeaponList()
-{
-		wepList.clear();
-		wepList.insert(1,weapon("wep1.png", 0, obj()));
-}
+#define WEP_CNT 1
 
 gameConn::gameConn(env* p, gamePlate* v):
 	QWidget(0),
@@ -17,30 +12,39 @@ gameConn::gameConn(env* p, gamePlate* v):
 {
 	wepBar= new QVBoxLayout(this);
 	connect(&mainTimer, SIGNAL(timeout()), this, SLOT(tick()));
-	viewer.setFocusProxy(this);
+	viewer->setFocusProxy(this);
+	wepList.clear();
+	for (int i= 0; i<WEP_CNT; i++)
+	{
+			visibleObj* pTmp = getWepEntity(i);
+			wepIcon* pTmp2 = new wepIcon(i, 0, pTmp->pixmap());
+			wepList.append(pTmp2);
+			wepBar->addWidget(pTmp2);
+			delete(pTmp);
+	}
 }
 
 void gameConn::destory(visibleObj* o)
 {
-	proxy->destory(o);
-	viewer->del(o);
-	delete o;
+		proxy->destory(o);
+		viewer->del(o);
+		delete o;
 }
 
 void gameConn::gameOver()
 {
-	viewer->youWin();
+		viewer->youWin();
 }
 
 void gameConn::tick()
 {
-	//Divide each main timer interval to 5 parts
-	//to get a more smooth simulation result
-	for (int i = 0; i< 5;i++)
-		proxy->update(mainTimer.interval()/5);
-	viewer->sync();
-	if (targetCnt <= 0)
-		gameOver();
+		//Divide each main timer interval to 5 parts
+		//to get a more smooth simulation result
+		for (int i = 0; i< 5;i++)
+				proxy->update(mainTimer.interval()/5);
+		viewer->sync();
+		if (targetCnt <= 0)
+				gameOver();
 
 }
 
@@ -63,42 +67,41 @@ void gameConn::tick()
 //
 void gameConn::setMap(char* filename)
 {
-	int n;
+		int n;
 
-	FILE* fin = fopen(filename, "r");
-	if (!fin)
-		return;
-	scanf("%d", &n);
-	for (int i = 0; i< n; i++)
-	{
-		int type,count;
-		scanf("%d", &type);
-
-		visibleObj* pTmp=NULL;
-		float x,y,w,h,theta;
-		switch(type)
+		FILE* fin = fopen(filename, "r");
+		if (!fin)
+				return;
+		scanf("%d", &n);
+		for (int i = 0; i< n; i++)
 		{
-			case 0:				//Weapons
-				scanf("%d %d", &type, &count);
-				wepCnt[type] = count;
-				break;
-			case 1:				//blocks
-				scanf("%f %f %f %f %f", &x, &y, &w, &h, &theta);
-				pTmp = new testBlock(x, y, w, h, theta);
-				break;
-			case 2:				//targets
-				scanf("%f %f %f %f %f", &x, &y, &w, &h, &theta);
-				pTmp = new target(x, y, w, h, theta);
-				targetCnt++;
-				break;
-			case 3:				//Launch tower
-				scanf("%f %f", &x, &y);
+				int type,count;
+				scanf("%d", &type);
+
+				visibleObj* pTmp=NULL;
+				float x,y,w,h,theta;
+				if (type>0&&type<25)				//Weapons
+				{
+						scanf("%d", &count);
+						wepList[type]->setNum(count);
+				}
+				else if(type>=25 && type <50)				//blocks
+				{	
+						scanf("%f %f %f %f %f", &x, &y, &w, &h, &theta);
+						pTmp = new testBlock(x, y, w, h, theta);
+				}
+				else if(type>=50 && type <75) 			//targets
+				{				
+						scanf("%f %f %f %f %f", &x, &y, &w, &h, &theta);
+						pTmp = new target(x, y, w, h, theta);
+						targetCnt++;
+				}
+				else if (type == 75)				//Launch tower
+						scanf("%f %f", &x, &y);
 				setLaunchPos(x,y);
-				break;
-		}
 
 		if (!pTmp)
-				return;
+				continue;
 		proxy->add(pTmp);
 		viewer->add(pTmp);
 	}
@@ -107,35 +110,44 @@ void gameConn::setMap(char* filename)
 
 void gameConn::start()
 {
-	mainTimer.start(DEFAULT_INTERVAL);
-	
+		mainTimer.start(DEFAULT_INTERVAL);
+
 }
 
-static visibleObj* gameConn::getWepEntity(int type)
+visibleObj* gameConn::getWepEntity(int type)
 {
 		visibleObj* pTmp=NULL;
 		switch(type)
 		{
-			case 0:
-					pTmp =  new testWep();
-					break;
-				
+				case 0:
+						break;
+
 		}
 		return pTmp;
 }
 
-void gameConn::loadWep(int type)
+void gameConn::fire()
 {
-	if (wepList[type].have())
-	{
-		wepList[type].changeNum(-1);
-		pTmp = wepCnt[type].fork(launchPos);
-		if (!pTmp)
-				return;
-		proxy->add(pTmp);
-		viewer->add(pTmp);
-	}
+		loaded = NULL;
 }
 
-
+void gameConn::loadWep(int type)
+{
+		if (wepList[type]->getN()>0)
+		{
+				if (loaded)
+				{
+						wepList[loaded->typeID]->changeNum(1);
+						loaded->destory();
+				}
+				visibleObj* pTmp;
+				wepList[type]->changeNum(-1);
+				pTmp = getWepEntity(type);
+				if (!pTmp)
+						return;
+				proxy->add(pTmp);
+				viewer->add(pTmp);
+				loaded = pTmp;
+		}
+}
 
