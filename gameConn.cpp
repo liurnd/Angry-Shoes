@@ -4,6 +4,7 @@
 #include"gameConn.h"
 #include<cstdio>
 #include <QMessageBox>
+#include <QKeyEvent>
 #define WEP_CNT 1
 
 gameConn::gameConn(env* p, gamePlate* v):
@@ -23,6 +24,7 @@ gameConn::gameConn(env* p, gamePlate* v):
 				wepList.append(pTmp2);
 				wepBar->addWidget(pTmp2);
 				delete(pTmp);
+				connect(pTmp2, SIGNAL(press), this, SLOT(loadWep));
 		}
 }
 
@@ -33,7 +35,7 @@ void gameConn::destory(visibleObj* o)
 				wepInAir = NULL;
 				wepCnt--;
 		}
-		proxy->destory(o);
+		proxy->destroy(o);
 		viewer->del(o);
 		delete o;
 }
@@ -66,22 +68,22 @@ void gameConn::tick()
 		}	
 
 		viewer->sync(); //Sync the view item to the physical position of object
-		if (wepInAir)
-				viewer->onCenter(wepInAir);
+		if (wepInAir)//Focus on the weapon if there is one in the air
+				viewer->centerOn(wepInAir);
 }
 
 //Map file format:
 //TypeID [parameter]\n
-//TypeID = 0	Weapons
+//TypeID = 0-24	Weapons
 //		parameter: Weapon_ID Available_Weapon_count
 //
-//TypeID = 1	Blocks
+//TypeID = 25-50	Blocks
 //		parameter:x y w h theta
 //
-//TypeID = 2	Targets
+//TypeID = 51-74	Targets
 //		prameter:x y w h theta
 //
-//TypeID = 3	launch tower position
+//TypeID = 75	launch tower position
 //		parameter: x y
 //
 //Note: if launch tower position or weapons with same Weapon_ID appear more
@@ -102,7 +104,7 @@ void gameConn::setMap(char* filename)
 
 				visibleObj* pTmp=NULL;
 				float x,y,w,h,theta;
-				if (type>0&&type<25)				//Weapons
+				if (type>=0&&type<25)				//Weapons
 				{
 						scanf("%d", &count);
 						wepList[type]->setNum(count);
@@ -160,6 +162,8 @@ void gameConn::loadWep(int type)
 		if (wepInAir) //If there's weapon in the air, no new weapon will be loaded.
 				return;
 
+		viewer->setAimLine();
+		viewer->setForceBar();
 		if (wepList[type]->getN()>0)
 		{
 				if (loaded)//Remove the loaded weapon if there is one
@@ -184,6 +188,33 @@ void gameConn::loadWep(int type)
 gameConn::~gameConn()
 {
 		for (QList<wepIcon*>::iterator a= wepList.begin(); a !=wepList.end(); a++)
-				delete a;
-		wepList.clear();
+				delete *a;
+}
+
+void gameConn::keyPressEvent(QKeyEvent *event)
+{
+		if (wepInAir || !loaded)
+				return;
+
+		switch(event->key())
+		{
+				case Qt::Key_Up :
+						viewer->changeAimLine(3.5);
+				case Qt::Key_Down:
+						viewer->changeAimLine(-3.0);
+				case Qt::Key_Space:
+						viewer->changeForceBar(4);
+		}
+}
+
+void gameConn::keyReleaseEvent(QKeyEvent *event)
+{
+		if (wepInAir|| !loaded)
+				return;
+		if (event->key() == Qt::Key_Space)
+		{
+				viewer->hideAimLine();
+				viewer->hideForceBar();
+				fire();
+		}
 }

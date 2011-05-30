@@ -6,6 +6,7 @@
 #define obj Body
 struct Body
 {
+	int typeID;
 	Vec2 position;
 	float rotation;
 
@@ -20,9 +21,10 @@ struct Body
 	float friction;
 	float mass, invMass;
 	float I, invI;
+	float Hp;
 	
 	Body();
-	void Set(const Vec2& w, float m,const Vec2& pos,const float ro);
+	Body(int type,const Vec2& w, float m,const Vec2& pos,const float ro);
 
 	void AddForce(const Vec2& f)
 	{

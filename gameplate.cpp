@@ -1,10 +1,17 @@
 #include "gameplate.h"
 
-typedef std::list<visibleObj*>::iterator lIt;
+typedef QList<visibleObj*>::iterator lIt;
+
 gamePlate::gamePlate(QWidget *parent) :
-	QWidget(parent), canvas(), view(&canvas, this)
+	QWidget(parent), canvas(), view(&canvas, this),
+		aimLine(), forceBar(this)
 {
 		view.setInteractive(false);
+		aimLine.hide();
+		forceBar.hide();
+		forceBar.move(5, this->height()-forceBar->height());
+		forceBar.setRange(0, 1000);
+		canvas.addItem(&aimLine);
 }
 
 void gamePlate::sync()
@@ -16,6 +23,7 @@ void gamePlate::sync()
 inline void gamePlate::del(visibleObj* o)
 {
 	canvas.removeItem(o);
+	list.removeItem(o);
 }
 
 void gamePlate::add(visibleObj* o)
@@ -25,7 +33,9 @@ void gamePlate::add(visibleObj* o)
 	canvas.addItem(o);
 }
 
-gamePlate::~gamePlate()
+void notify(const char* str)
 {
+		QMessageBox box;
+		box.setText(str);
+		box.exec();
 }
-

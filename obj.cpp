@@ -16,10 +16,12 @@ Body::Body()
 	invMass = 0.0f;
 	I = FLT_MAX;
 	invI = 0.0f;
+	Hp=0.0f;
 }
 
-void Body::Set(const Vec2& w, float m,const Vec2& pos,const float ro)
+ Body::Body(int typeID, const Vec2& w, float m,const Vec2& pos,const float ro)
 {
+	typeID = type;
 	position=pos;
 	rotation = ro;
 	velocity.Set(0.0f, 0.0f);

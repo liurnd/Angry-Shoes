@@ -184,7 +184,20 @@ void Arbiter::ApplyImpulse()
 		b1->velocity -= b1->invMass * Pt;
 		b1->angularVelocity -= b1->invI * Cross(c->r1, Pt);
 
+
 		b2->velocity += b2->invMass * Pt;
 		b2->angularVelocity += b2->invI * Cross(c->r2, Pt);
+
+		b1->Hp-=0.1*b2->velocity.Length()*b2->mass;
+		if(b1->Hp<=0)
+			b1->destroy(*b2);
+		else
+			b1->hit(*b2);
+
+		b2->Hp-=0.1*b1->velocity.Length()*b1->mass;
+		if(b2->Hp<=0)
+			b2->destroy(*b1);
+		else 
+			b2->hit(*b1);
 	}
 }

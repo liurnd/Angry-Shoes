@@ -28,14 +28,15 @@ class gameConn:public QWidget
 				void gameOver();
 				QList<wepIcon*> wepList;
 				visibleObj* loaded,*wepInAir;
-
+				void keyPressEvent(QKeyEvent *event);
+				void keyReleaseEvent(QKeyEvent *event);
 		private slots:
 				void tick();
+				void loadWep(int type);
 
 		public:
 				int targetCnt, wepCnt;
 				void destory(visibleObj* o);
-				void loadWep(int type);
 				void fire();
 				void loadWeaponList();
 				gameConn(env* proxy, gamePlate* viewer);
@@ -46,5 +47,7 @@ class gameConn:public QWidget
 				inline void setLaunchPos(float x, float y){launchPos.x = x; launchPos.y = y;}
 signals:
 				void gameOver(bool win);
+
+				~gameConn();
 };
 #endif

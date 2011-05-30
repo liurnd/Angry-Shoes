@@ -11,8 +11,7 @@ class visibleObj:public obj, public QGraphicsPixmapItem
 		static gameConn* conn;
 	public:
 		visibleObj(QPixmap& map);
-		visibleObj(const char* filename);
-		visibleObj(const char* filename,const obj& model);
+		visibleObj(const char* filename, const obj& model);
 
 		static inline void setGameConn(gameConn* con){conn = con;}
 

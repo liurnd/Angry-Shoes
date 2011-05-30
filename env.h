@@ -6,7 +6,7 @@
 #include <map>
 #include "MathUtils.h"
 #include "Arbiter.h"
-
+#define World env
 struct Body;
 struct Joint;
 
