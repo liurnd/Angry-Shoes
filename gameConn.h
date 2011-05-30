@@ -6,6 +6,7 @@
 #include"obj.h"
 #include"visibleObj.h"
 #include"weapons.h"
+#include"mathUtil.h"
 #include<QTimer>
 #include<QMap>
 #define DEFAULT_INTERVAL 10
@@ -26,13 +27,13 @@ class gameConn:public QWidget
 				QVBoxLayout* wepBar ;
 				void gameOver();
 				QList<wepIcon*> wepList;
-				visibleObj* loaded;
+				visibleObj* loaded,*wepInAir;
 
 		private slots:
 				void tick();
 
 		public:
-				int targetCnt;
+				int targetCnt, wepCnt;
 				void destory(visibleObj* o);
 				void loadWep(int type);
 				void fire();
@@ -43,5 +44,7 @@ class gameConn:public QWidget
 				void start();
 
 				inline void setLaunchPos(float x, float y){launchPos.x = x; launchPos.y = y;}
+signals:
+				void gameOver(bool win);
 };
 #endif

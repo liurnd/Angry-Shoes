@@ -28,3 +28,4 @@ void gamePlate::add(visibleObj* o)
 gamePlate::~gamePlate()
 {
 }
+

@@ -7,33 +7,47 @@
 #define WEP_CNT 1
 
 gameConn::gameConn(env* p, gamePlate* v):
-	QWidget(0),
-	proxy(p), viewer(v), targetCnt(0)
+		QWidget(0),
+		proxy(p), viewer(v), 
+		targetCnt(0),
+		wepInAir(NULL)
 {
-	wepBar= new QVBoxLayout(this);
-	connect(&mainTimer, SIGNAL(timeout()), this, SLOT(tick()));
-	viewer->setFocusProxy(this);
-	wepList.clear();
-	for (int i= 0; i<WEP_CNT; i++)
-	{
-			visibleObj* pTmp = getWepEntity(i);
-			wepIcon* pTmp2 = new wepIcon(i, 0, pTmp->pixmap());
-			wepList.append(pTmp2);
-			wepBar->addWidget(pTmp2);
-			delete(pTmp);
-	}
+		wepBar= new QVBoxLayout(this);
+		connect(&mainTimer, SIGNAL(timeout()), this, SLOT(tick()));
+		viewer->setFocusProxy(this);
+		wepList.clear();
+		for (int i= 0; i<WEP_CNT; i++)
+		{
+				visibleObj* pTmp = getWepEntity(i);
+				wepIcon* pTmp2 = new wepIcon(i, 0, pTmp->pixmap());
+				wepList.append(pTmp2);
+				wepBar->addWidget(pTmp2);
+				delete(pTmp);
+		}
 }
 
 void gameConn::destory(visibleObj* o)
 {
+		if (o == wepInAir)
+		{
+				wepInAir = NULL;
+				wepCnt--;
+		}
 		proxy->destory(o);
 		viewer->del(o);
 		delete o;
 }
 
-void gameConn::gameOver()
+void gameConn::gameOver(bool win)
 {
-		viewer->youWin();
+		if (win)
+		{
+				viewer->youWin();
+		}
+		else
+		{
+				viewer->youLose();
+		}
 }
 
 void gameConn::tick()
@@ -41,11 +55,19 @@ void gameConn::tick()
 		//Divide each main timer interval to 5 parts
 		//to get a more smooth simulation result
 		for (int i = 0; i< 5;i++)
-				proxy->update(mainTimer.interval()/5);
-		viewer->sync();
-		if (targetCnt <= 0)
-				gameOver();
+		{
+				if (!proxy->update(mainTimer.interval()/5))
+				{
+						if (targetCnt <= 0)
+								gameOver(true);
+						else if (wepCnt<=0)
+								gameOver(false);
+				}
+		}	
 
+		viewer->sync(); //Sync the view item to the physical position of object
+		if (wepInAir)
+				viewer->onCenter(wepInAir);
 }
 
 //Map file format:
@@ -84,6 +106,7 @@ void gameConn::setMap(char* filename)
 				{
 						scanf("%d", &count);
 						wepList[type]->setNum(count);
+						wepCnt+= count;
 				}
 				else if(type>=25 && type <50)				//blocks
 				{	
@@ -100,11 +123,11 @@ void gameConn::setMap(char* filename)
 						scanf("%f %f", &x, &y);
 				setLaunchPos(x,y);
 
-		if (!pTmp)
-				continue;
-		proxy->add(pTmp);
-		viewer->add(pTmp);
-	}
+				if (!pTmp)
+						continue;
+				proxy->add(pTmp);
+				viewer->add(pTmp);
+		}
 }
 
 
@@ -128,26 +151,39 @@ visibleObj* gameConn::getWepEntity(int type)
 
 void gameConn::fire()
 {
+		wepInAir = loaded;
 		loaded = NULL;
 }
 
 void gameConn::loadWep(int type)
 {
+		if (wepInAir) //If there's weapon in the air, no new weapon will be loaded.
+				return;
+
 		if (wepList[type]->getN()>0)
 		{
-				if (loaded)
+				if (loaded)//Remove the loaded weapon if there is one
 				{
 						wepList[loaded->typeID]->changeNum(1);
 						loaded->destory();
 				}
+
 				visibleObj* pTmp;
 				wepList[type]->changeNum(-1);
 				pTmp = getWepEntity(type);
 				if (!pTmp)
 						return;
+
 				proxy->add(pTmp);
 				viewer->add(pTmp);
 				loaded = pTmp;
+				wepInAir = NULL;
 		}
 }
 
+gameConn::~gameConn()
+{
+		for (QList<wepIcon*>::iterator a= wepList.begin(); a !=wepList.end(); a++)
+				delete a;
+		wepList.clear();
+}
