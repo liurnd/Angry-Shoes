@@ -7,16 +7,18 @@ class gameConn;
 class visibleObj:public obj, public QGraphicsPixmapItem
 {
 	private:
-		void setCenter();
-		static gameConn* conn;
+                void setCenter();
+                QPixmap icon;
 	public:
+		static gameConn* conn;
+
 		visibleObj(QPixmap& map);
 		visibleObj(const char* filename, const obj& model);
 
 		static inline void setGameConn(gameConn* con){conn = con;}
 
 		void sync();
-		virtual void destory(obj& byWho);
-		void destory();
+		virtual void destroy(obj& byWho);
 };
+
 #endif

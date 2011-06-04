@@ -24,11 +24,11 @@ void World::add(Joint* joint)
 	joints.push_back(joint);
 }
 
-void World::destroy()
+void World::destroy(Body* o)
 {
-	bodies.clear();
-	joints.clear();
-	arbiters.clear();
+	Body a;
+	if(o->Hp<=0)
+			o->destroy(a);
 }
 
 void World::BroadPhase()

@@ -27,7 +27,7 @@ struct World
 
 	void add(Body* body);
 	void add(Joint* joint);
-	void destroy();
+	void destroy(Body * o);
 
 	bool update(float dt);
 

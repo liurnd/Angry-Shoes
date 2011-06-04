@@ -19,7 +19,7 @@ Body::Body()
 	Hp=0.0f;
 }
 
- Body::Body(int typeID, const Vec2& w, float m,const Vec2& pos,const float ro)
+Body::Body(int type, const Vec2& w, float m,const Vec2& pos,const float ro)
 {
 	typeID = type;
 	position=pos;

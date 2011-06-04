@@ -1,7 +1,6 @@
-
 #ifndef OBJ_H
 #define OBJ_H
-
+#include<QtCore>
 #include "MathUtils.h"
 #define obj Body
 struct Body
@@ -31,8 +30,8 @@ struct Body
 		force += f;
 	}
 
-	virtual void destroy(obj& byWho);
-	virtual void hit(obj& byWho);	
+        virtual void destroy(obj& byWho){Q_UNUSED(byWho);}
+        virtual void hit(obj& byWho){Q_UNUSED(byWho);}
 };
 
 #endif

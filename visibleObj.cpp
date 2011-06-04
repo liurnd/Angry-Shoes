@@ -1,23 +1,27 @@
 #include"visibleObj.h"
 #include"gameConn.h"
 
+gameConn* visibleObj::conn = NULL;
+
 visibleObj::visibleObj(const char* filename, const obj& model):
-	obj(model)
+        obj(model),icon(filename)
 {
-	QPixmap tmp = QPixmap(filename).scaled(model.shape.x, model.shape.y);
+        icon.scaled(model.width.x, model.width.y);
+        setPixmap(icon);
 	setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
 	setCenter();
 }
 
 void visibleObj::sync()
 {
-	setPos(obj::pos.x, obj::pos.y);
-	setRotation(theta);
+	setPos(position.x, position.y);
+	setRotation(obj::rotation);
 }
 
-void visibleObj::destory(obj& byWho)
+void visibleObj::destroy(obj& byWho)
 {
-	conn->destory(this);
+        Q_UNUSED(byWho);
+        conn->destroy(this);
 }
 
 inline void visibleObj::setCenter(){setOffset(-0.5*QPointF(boundingRect().width(), boundingRect().height()));}

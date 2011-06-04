@@ -18,36 +18,39 @@ class gamePlate;
 
 class gameConn:public QWidget
 {
-		Q_OBJECT
+        Q_OBJECT
 		private:
-				env* proxy;
-				gamePlate *viewer;
-				QTimer mainTimer;
-				vec launchPos;
-				QVBoxLayout* wepBar ;
-				void gameOver();
-				QList<wepIcon*> wepList;
-				visibleObj* loaded,*wepInAir;
-				void keyPressEvent(QKeyEvent *event);
-				void keyReleaseEvent(QKeyEvent *event);
-		private slots:
-				void tick();
-				void loadWep(int type);
+        env* proxy;
+        gamePlate *viewer;
+        visibleObj* tmp;
+        wepIcon*  tmp1;
+        QTimer mainTimer;
+        vec launchPos;
+        QVBoxLayout* wepBar ;
+        QList<wepIcon*> wepList;
+        visibleObj* loaded,*wepInAir;
+        void keyPressEvent(QKeyEvent *event);
+        void keyReleaseEvent(QKeyEvent *event);
+private slots:
+        void tick();
+public slots:
+        void loadWep(int type);
 
 		public:
-				int targetCnt, wepCnt;
-				void destory(visibleObj* o);
-				void fire();
-				void loadWeaponList();
-				gameConn(env* proxy, gamePlate* viewer);
-				static visibleObj* getWepEntity(int type);
-				void setMap(char* filename);
-				void start();
+        int targetCnt, wepCnt;
+        void destroy(visibleObj* o);
+        void fire();
+        gameConn(env* proxy, gamePlate* viewer);
+        static visibleObj* getWepEntity(int type);
+        void setMap(char* filename);
+        void start();
+        ~gameConn();
+        void gameOver(bool win);
 
-				inline void setLaunchPos(float x, float y){launchPos.x = x; launchPos.y = y;}
-signals:
-				void gameOver(bool win);
+        void setLaunchPos(float x, float y)
+        {
+        	launchPos.x = x; launchPos.y = y;
+        }
 
-				~gameConn();
 };
 #endif

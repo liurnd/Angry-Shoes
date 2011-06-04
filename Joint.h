@@ -13,10 +13,10 @@ struct Joint
 	Vec2 localAnchor1, localAnchor2;
 	Vec2 r1, r2;
 	Vec2 bias;
-	Vec2 P;		// accumulated impulse
 	Body* body1;
 	Body* body2;
-	float biasFactor;
+        Vec2 P;		// accumulated impulse
+        float biasFactor;
 	float softness;
 	
 	Joint() :
