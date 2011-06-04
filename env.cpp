@@ -2,11 +2,11 @@
 #include "env.h"
 #include "obj.h"
 #include "Joint.h"
+#define  bodies list
 
 using std::vector;
 using std::map;
 using std::pair;
-#define  bodies list
 typedef map<ArbiterKey, Arbiter>::iterator ArbIter;
 typedef pair<ArbiterKey, Arbiter> ArbPair;
 

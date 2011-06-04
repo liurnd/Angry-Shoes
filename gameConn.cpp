@@ -157,7 +157,6 @@ visibleObj* gameConn::getWepEntity(int type)
         case 0:
                 pTmp = new testWep();
                 break;
-
         }
         return pTmp;
 }
@@ -211,21 +210,21 @@ void gameConn::keyPressEvent(QKeyEvent *event)
 
         switch(event->key())
         {
-				case Qt::Key_Up :
+        case Qt::Key_Up :
                 viewer->changeAimLine(3.5);
                 break;
-				case Qt::Key_Down:
+        case Qt::Key_Down:
                 viewer->changeAimLine(-3.0);
                 break;
-				case Qt::Key_Space:
-                viewer->changeForceBar(4);
+        case Qt::Key_Space:
+                viewer->changeForceBar(3.5);
                 break;
         }
 }
 
 void gameConn::keyReleaseEvent(QKeyEvent *event)
 {
-        if (wepInAir|| !loaded)
+        //if (wepInAir|| !loaded)
                 return;
         if (event->key() == Qt::Key_Space)
         {

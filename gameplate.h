@@ -49,7 +49,7 @@ public:
 	{
 		aimLine.show();
 		theta = th;
-		aimLine.setRotation(theta);
+                aimLine.setRotation(theta);
 	}
 
 	inline void setAimLine()
@@ -83,11 +83,13 @@ public:
 
 	inline void setForceBar()
 	{
-		setForceBar(0);
-	}
+                setForceBar(0);
+        }
+
 	inline void setForceBar(float v)
 	{
-		forceBar.show();
+                forceBar.show();
+                forceBar.raise();
 		force = v;
 		forceBar.setValue(force);
 		isAdd = true;
@@ -97,25 +99,7 @@ public:
 		return force;
 	}
 
-	void changeForceBar(float dv)
-	{
-		if (isAdd)
-		{
-			if (force + dv < forceBar.maximum())
-				force += dv;
-			else
-				isAdd = false;
-		}
-		else
-		{
-			if (force - dv > forceBar.minimum())
-				force -= dv;
-			else
-				isAdd = true;
-		}
-
-		forceBar.setValue(force);
-	}
+        void changeForceBar(float dv);
 
 	inline void hideForceBar()
 	{

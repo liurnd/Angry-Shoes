@@ -3,8 +3,6 @@
 #include "obj.h"
 #include "env.h"
 
-//#include "glut.h"
-
 Arbiter::Arbiter(Body* b1, Body* b2)
 {
 	if (b1 < b2)
