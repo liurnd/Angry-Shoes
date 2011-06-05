@@ -4,9 +4,10 @@
 #include"blocks.h"
 #include"gameConn.h"
 #include<cstdio>
-#include <QMessageBox>
-#include <QKeyEvent>
+#include<QMessageBox>
+#include<QKeyEvent>
 #define WEP_CNT 1
+#define STATIC_DEBUG	//Disable the physical function and procedure
 
 gameConn::gameConn(env* p, gamePlate* v):
 		QWidget(0),
@@ -146,7 +147,9 @@ void gameConn::setMap(char* filename)
 
 void gameConn::start()
 {
-        //mainTimer.start(DEFAULT_INTERVAL);
+#ifndef STATIC_DEBUG
+        mainTimer.start(DEFAULT_INTERVAL);
+#endif
 }
 
 visibleObj* gameConn::getWepEntity(int type)
@@ -161,11 +164,14 @@ visibleObj* gameConn::getWepEntity(int type)
         return pTmp;
 }
 
-void gameConn::fire()
+void gameConn::fire(float theta, float speed)
 {
-        wepInAir = loaded;
-        wepCnt--;
         loaded = NULL;
+        wepCnt--;
+        wepInAir = loaded;
+        vec v(cos(theta),sin(theta));
+        v = speed * v;
+        wepInAir->velocity = v;
 }
 
 void gameConn::loadWep(int type)
@@ -181,7 +187,6 @@ void gameConn::loadWep(int type)
                 {
                         wepList[loaded->typeID]->changeNum(1);
                         loaded->destroy(*loaded);
-                        delete loaded;
                 }
 
                 visibleObj* pTmp;
@@ -224,12 +229,12 @@ void gameConn::keyPressEvent(QKeyEvent *event)
 
 void gameConn::keyReleaseEvent(QKeyEvent *event)
 {
-        //if (wepInAir|| !loaded)
+        if (wepInAir|| !loaded)
                 return;
         if (event->key() == Qt::Key_Space)
         {
                 viewer->hideAimLine();
                 viewer->hideForceBar();
-                fire();
+                fire(viewer->getAimLine(), viewer->getForceBar());
         }
 }

@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 	gamePlate w;
 	w.show();
 
-	env world(vec(0,-9.8), 5);
+        env world(vec(0,0.0098), 5);
 
 	gameConn conn(&world, &w);
 	visibleObj::setGameConn(&conn);

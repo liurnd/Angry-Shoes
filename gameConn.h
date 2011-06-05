@@ -39,7 +39,7 @@ public slots:
 		public:
         int targetCnt, wepCnt;
         void destroy(visibleObj* o);
-        void fire();
+        void fire(float, float);
         gameConn(env* proxy, gamePlate* viewer);
         static visibleObj* getWepEntity(int type);
         void setMap(char* filename);
