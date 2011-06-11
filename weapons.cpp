@@ -1,7 +1,6 @@
 #include"obj.h"
 #include<cstdio>
 #include"weapons.h"
-#define DEBUG
 void wepIcon::numFlush()
 {
 		QString tmp;

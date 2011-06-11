@@ -166,9 +166,9 @@ visibleObj* gameConn::getWepEntity(int type)
 
 void gameConn::fire(float theta, float speed)
 {
+        wepInAir = loaded;
         loaded = NULL;
         wepCnt--;
-        wepInAir = loaded;
         vec v(cos(theta),sin(theta));
         v = speed * v;
         wepInAir->velocity = v;
@@ -211,7 +211,10 @@ gameConn::~gameConn()
 void gameConn::keyPressEvent(QKeyEvent *event)
 {
         if (wepInAir || !loaded)
+        {
+                event->ignore();
                 return;
+        }
 
         switch(event->key())
         {
@@ -230,11 +233,14 @@ void gameConn::keyPressEvent(QKeyEvent *event)
 void gameConn::keyReleaseEvent(QKeyEvent *event)
 {
         if (wepInAir|| !loaded)
+        {
+                event->ignore();
                 return;
-        if (event->key() == Qt::Key_Space)
+        }
+        if (event->key() == Qt::Key_Space && !(event->isAutoRepeat()))
         {
                 viewer->hideAimLine();
                 viewer->hideForceBar();
-                fire(viewer->getAimLine(), viewer->getForceBar());
+                fire(viewer->getAimLine(), viewer->getForceBar()/12.0);
         }
 }

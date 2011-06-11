@@ -2,6 +2,8 @@
 #define OBJ_H
 #include<QtCore>
 #include "MathUtils.h"
+#include"option.h"
+
 #define obj Body
 struct Body
 {

@@ -1,6 +1,7 @@
 #ifndef GAMEPLATE_H
 #define GAMEPLATE_H
 
+#include"option.h"
 #include <QWidget>
 #include<QGraphicsScene>
 #include<QMessageBox>
@@ -46,10 +47,13 @@ public:
 	}
 
 	inline void setAimLine(float th)
-	{
-		aimLine.show();
+        {
+                aimLine->moveBy(lPosX, lPosY);
+                aimLine->show();
 		theta = th;
-                aimLine.setRotation(theta);
+                aimLine->setRotation(theta);
+                view.update();
+
 	}
 
 	inline void setAimLine()
@@ -60,8 +64,8 @@ public:
 	void changeAimLine(float dt)
 	{
 		theta += dt;
-		aimLine.setRotation(theta);
-		view.update();
+                aimLine->setRotation(theta);
+                view.update();
 	}
 
 	inline float getAimLine()
@@ -78,7 +82,7 @@ public:
 
 	inline void hideAimLine()
 	{
-		aimLine.hide();
+                aimLine->hide();
 	}
 
 	inline void setForceBar()
@@ -114,7 +118,7 @@ private:
 	QGraphicsScene canvas;
 	QGraphicsView view;
 	QProgressBar forceBar;
-	QGraphicsLineItem aimLine;
+        QGraphicsLineItem *aimLine;
 	QList<visibleObj*> list;
 };
 

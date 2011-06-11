@@ -9,9 +9,8 @@
 #include"mathUtil.h"
 #include<QTimer>
 #include<QMap>
-#define DEFAULT_INTERVAL 10
-#define MAX_WEAPON_TYPE 255
-#define ICON_SIZE 25
+#include"option.h"
+
 
 class env;
 class gamePlate;

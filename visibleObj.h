@@ -2,6 +2,7 @@
 #define VISIBLEOBJ_H
 #include<obj.h>
 #include<QGraphicsPixmapItem>
+#include"option.h"
 
 class gameConn;
 class visibleObj:public obj, public QGraphicsPixmapItem

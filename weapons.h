@@ -2,6 +2,7 @@
 #define WEAPON_H
 #include<QWidget>
 #include<QPainter>
+#include"option.h"
 #include<QLabel>
 #include"mathUtil.h"
 #include"visibleObj.h"
@@ -11,7 +12,7 @@ class wepIcon:public QWidget
 private:
         int n;
         int typeID;
-        static const int iconSize = 40;
+        static const int iconSize = ICONSIZE;
         void numFlush();
         QPixmap icon;
         QLabel label;
