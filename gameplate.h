@@ -2,6 +2,9 @@
 #define GAMEPLATE_H
 
 #include"option.h"
+#ifdef DEBUG
+#include<QTransform>
+#endif
 #include <QWidget>
 #include<QGraphicsScene>
 #include<QMessageBox>
@@ -50,6 +53,7 @@ public:
         {
                 aimLine->moveBy(lPosX, lPosY);
                 aimLine->show();
+                aimLine->setZValue(200);
 		theta = th;
                 aimLine->setRotation(theta);
                 view.update();
@@ -109,17 +113,24 @@ public:
 	{
 		forceBar.hide();
 	}
+        QSize sizeHint()const;
+        void resizeEvent(QResizeEvent *);
 
 private:
-	float theta;
+        float theta;
 	float force;
 	bool isAdd; //Be true if you want the force growing, otherwise set it to false;
-	float lPosX, lPosY;
+        float lPosX, lPosY;
+#ifdef DEBUG
+        QTransform tmp;//For debug
+#endif
 	QGraphicsScene canvas;
 	QGraphicsView view;
 	QProgressBar forceBar;
         QGraphicsLineItem *aimLine;
-	QList<visibleObj*> list;
+        QList<visibleObj*> list;
+        //void mousePressEvent(QMouseEvent* e);
+
 };
 
 #endif // GAMEPLATE_H

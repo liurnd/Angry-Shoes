@@ -6,7 +6,7 @@ gameConn* visibleObj::conn = NULL;
 visibleObj::visibleObj(const char* filename, const obj& model):
         obj(model),icon(filename)
 {
-        icon.scaled(model.width.x, model.width.y);
+        scale(model.width.x/icon.size().width(), -model.width.y/icon.size().height());
         setPixmap(icon);
 	setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
 	setCenter();

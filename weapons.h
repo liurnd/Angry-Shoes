@@ -47,7 +47,7 @@ class testWep:public visibleObj
 {
 public:
         testWep():
-                        visibleObj("testWep.png",obj(0, vec(250.0,20.0), 10, vec(0,0), 0))
+                        visibleObj("testWep.png",obj(0, vec(30.0,10.0), 10, vec(0,0), 0))
         {
         }
         void destroy();

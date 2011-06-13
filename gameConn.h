@@ -25,7 +25,7 @@ class gameConn:public QWidget
         wepIcon*  tmp1;
         QTimer mainTimer;
         vec launchPos;
-        QVBoxLayout* wepBar ;
+        QHBoxLayout* wepBar ;
         QList<wepIcon*> wepList;
         visibleObj* loaded,*wepInAir;
         void keyPressEvent(QKeyEvent *event);
@@ -35,16 +35,17 @@ private slots:
 public slots:
         void loadWep(int type);
 
-		public:
+public:
         int targetCnt, wepCnt;
         void destroy(visibleObj* o);
         void fire(float, float);
-        gameConn(env* proxy, gamePlate* viewer);
+        gameConn(QWidget* parent, env* proxy, gamePlate* viewer);
         static visibleObj* getWepEntity(int type);
-        void setMap(char* filename);
+        void setMap(const char* filename);
         void start();
         ~gameConn();
         void gameOver(bool win);
+        QSize sizeHint()const;
 
         void setLaunchPos(float x, float y)
         {

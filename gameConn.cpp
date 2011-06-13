@@ -7,34 +7,39 @@
 #include<QMessageBox>
 #include<QKeyEvent>
 #define WEP_CNT 1
-#define STATIC_DEBUG	//Disable the physical function and procedure
 
-gameConn::gameConn(env* p, gamePlate* v):
-		QWidget(0),
+gameConn::gameConn(QWidget* parent, env* p, gamePlate* v):
+                QWidget(parent),
 		proxy(p), viewer(v),
                 wepInAir(NULL),
                 targetCnt(0)
 {
-        wepBar= new QVBoxLayout(this);
+        wepBar= new QHBoxLayout(this);
         this->setLayout(wepBar);
         connect(&mainTimer, SIGNAL(timeout()), this, SLOT(tick()));
-        viewer->setFocusProxy(this);
         wepList.clear();
         for (int i= 0; i<WEP_CNT; i++)
         {
                 tmp = getWepEntity(i);
                 tmp1 = new wepIcon(this, i, 0, tmp->pixmap());
+
                 wepList.append(tmp1);
-                wepBar->addWidget(tmp1);
+                wepBar->addWidget(tmp1,1);
 
                 tmp1->show();
 
                 delete(tmp);
                 connect(tmp1, SIGNAL(press(int)), this, SLOT(loadWep(int)));
         }
+        wepBar->addStretch();
         loaded = NULL;
         wepBar->update();
-        resize(80,60);
+        setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Maximum);
+}
+
+QSize gameConn::sizeHint() const
+{
+        return QSize(800,100);
 }
 
 void gameConn::destroy(visibleObj* o)
@@ -98,7 +103,7 @@ void gameConn::tick()
 //Note: if launch tower position or weapons with same Weapon_ID appear more
 //than once. The previous value will be override with no warning.
 //
-void gameConn::setMap(char* filename)
+void gameConn::setMap(const char* filename)
 {
         int n;
         FILE* fin = fopen(filename, "r");
@@ -195,8 +200,10 @@ void gameConn::loadWep(int type)
                 if (!pTmp)
                         return;
 
+                pTmp->position = launchPos;
                 proxy->add(pTmp);
                 viewer->add(pTmp);
+                viewer->centerOn(pTmp);
                 loaded = pTmp;
                 wepInAir = NULL;
         }
